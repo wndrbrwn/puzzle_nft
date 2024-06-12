@@ -8,23 +8,25 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { FC, useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { OutletContext } from "../components/Layout";
 import PuzzleCard from "../components/PuzzleCard";
 
 const Home: FC = () => {
-  const [mintedList, setMintedList] = useState<boolean[]>([]);
+  const [mintedList, setMintedList] = useState<number[]>([]);
   const [progress, setProgress] = useState<number>(0);
 
   const { signer, mintContract } = useOutletContext<OutletContext>();
+
+  const navigate = useNavigate();
 
   const getCheckNfts = async () => {
     try {
       if (!signer || !mintContract) return;
 
-      const response = await mintContract.checkNfts(signer.address);
+      const response = await mintContract.balanceOfNfts(signer.address);
 
-      const temp = response.map((v: boolean) => v);
+      const temp = response.map((v: bigint) => Number(v));
 
       setMintedList(temp);
     } catch (error) {
@@ -49,18 +51,24 @@ const Home: FC = () => {
   }, [mintedList]);
 
   return (
-    <Flex flexDir="column" w="100%">
+    <Flex flexDir="column" w="100%" mb={[10, 10, 20]}>
       <Flex
-        flexDir={"column"}
+        flexDir="column"
         gap={[2, 2, 4]}
+        color="blue.500"
         h={[20, 20, 40]}
         justifyContent="center"
         alignItems="center"
+        fontWeight="semibold"
         fontSize={[24, 24, 48]}
       >
-        <Text>⛔️ 바다가 좋아요!!! ⛔️</Text>
-        <Button variant="outline" colorScheme="blue">
-          구하러가기
+        <Text>Exodia the Forbidden One</Text>
+        <Button
+          variant="outline"
+          colorScheme="blue"
+          onClick={() => navigate("/mint")}
+        >
+          summon Exodia
         </Button>
       </Flex>
       <Flex
@@ -71,13 +79,18 @@ const Home: FC = () => {
       >
         {signer ? (
           <>
-            <Flex w={[320, 320, 640]} my={[4, 4, 8]} gap={[2, 2, 4]}>
-              <Text fontSize={[16, 16, 24]}>진행도</Text>
+            <Flex
+              w={[200, 320, 640]}
+              my={[4, 4, 8]}
+              gap={[2, 2, 4]}
+              alignItems="center"
+            >
+              <Text fontSize={[16, 16, 24]}>✡ summoning ✡</Text>
               <Progress hasStripe value={progress} h={[4, 4, 8]} flexGrow={1} />
             </Flex>
             <Grid templateColumns={"repeat(4, 1fr)"}>
               {mintedList.map((v, i) => (
-                <PuzzleCard key={i} index={i} isMinted={v} />
+                <PuzzleCard key={i} index={i} balance={v} />
               ))}
             </Grid>
           </>
@@ -91,10 +104,52 @@ const Home: FC = () => {
               h="100%"
               bgColor="rgba(0,0,0,0.5)"
             />
-            <Image src="/images/save_the_sea.webp" alt="Save the SEA" />
+            <Image src="/images/Exodia.png" alt="Exodia the Forbidden One" />
           </Box>
         )}
       </Flex>
+      <Flex
+       flexDir="column"
+       gap={[2, 2, 1]}
+       color="gray"
+       h={[20, 20, 1100]}
+       justifyContent="center"
+       alignItems="center"
+       
+       fontSize={[2, 2, 20]}>
+           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢺⡟⠒⠒⠲⢦⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢷⠀⠀⣄⡀⠀⠈⠉⠓⠶⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⡇⠀⢻⣿⣷⣤⣷⣦⣀⠀⠉⠳⣦⡀⠀⠀⠀⠀⠀⠀⠀⣀⣤⠶⠶⢶⡶⠟⠟⢻⣿⠆⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⡀⠈⣿⣿⣿⣿⣿⣿⣷⣤⡀⠈⠙⢶⡀⢀⣀⡤⠞⠛⢁⣀⣤⣴⡿⠃⠀⢠⡟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⣀⣀⣀⠀⠀⠀⠀⢠⣶⣶⡀⠀⠀⠸⡇⠀⢻⣿⣿⣿⣿⣿⣿⣿⣿⣶⣄⠀⠙⠛⢁⣠⣴⣾⣿⣿⣿⣿⣾⠁⢀⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⣴⡏⠉⠹⣧⠀⠀⠀⠘⠛⠛⠃⠀⠀⠀⢻⠀⠘⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣤⣴⣿⣿⣿⣿⣿⣿⣿⣿⠁⠀⣼⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠙⢧⣄⣼⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡄⠀⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⣿⠋⢸⣿⣿⠃⠀⣰⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣠⡤⠤⠴⠾⠃⠀⣨⣿⡏⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⠋⠀⣿⠀⢸⣿⡟⠀⢠⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⣀⣤⠴⠛⠋⠁⠀⠀⠀⠀⠀⣀⣀⣿⠀⢻⡀⠀⠈⠛⢿⣿⣿⣿⣿⢹⠆⠀⣿⠀⢸⣿⣇⣀⡾⠤⣄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⢠⣴⠞⠋⠀⣀⣀⣤⣤⣴⣶⣶⣿⣿⣿⣿⣿⡄⠈⣧⠀⠀⢶⣤⣝⣿⠃⢸⢸⠀⠀⢿⡀⠘⠛⠉⠁⠀⣀⣀⣉⣳⣦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠻⢧⣤⠀⠘⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⢷⣀⣽⠆⠀⠀⣿⠛⠛⣻⠈⢿⡇⠀⠈⠛⠲⢤⣤⣶⣯⣉⠛⠓⢦⣍⡉⠛⠒⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠈⠙⠳⣤⡈⠻⢿⣿⣿⣿⣿⣿⣿⠇⣤⠞⠉⠀⠀⠀⢀⣸⡇⠀⢸⠀⣾⣶⣿⣷⠦⣄⠀⠙⢿⣿⣿⣷⣶⣄⡈⠙⣶⣄⠀⠀⠀⠀⠀⠀⠀
+⢰⣟⣿⠆⠀⠀⠀⠀⠙⢦⣀⠙⠿⣿⣿⣿⣿⠀⣿⠀⠀⣠⣴⡿⠿⢿⡳⠟⢿⣾⣿⠋⠀⠘⣧⠈⣿⣦⣀⠙⢿⣿⡿⣟⣥⠞⠛⠁⠀⠀⠀⠀⠀⠀⠀
+⠀⠉⠉⠀⠀⠀⠀⠀⠀⠀⠘⣷⡤⠉⣻⡟⣻⠀⠹⡄⠀⢹⡟⠀⠀⠀⢻⡆⠘⠇⣿⠀⠀⠀⠈⡇⣿⠛⣿⣷⣦⣽⣿⡋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⣠⡴⠊⠁⣠⣴⠋⣠⣿⠀⢸⣧⠀⢸⠀⠀⠀⠀⡤⣷⠀⠀⢿⠷⠀⠀⠀⡇⣿⠀⣿⡿⠋⠉⠙⢿⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢀⣤⠞⢉⣤⣶⣿⣿⣧⣾⣿⣿⠀⣿⢸⡀⢿⠀⠀⠀⠀⣁⣤⡴⠺⣶⠖⠲⢦⡴⠗⣿⢀⡟⠀⠀⠀⠀⠀⠈⠻⠄⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠿⠷⢤⣬⣉⣉⣿⡿⠿⢿⣿⣿⢠⣿⠈⣇⢛⠻⠶⢒⠋⠉⢀⣀⣠⡿⠶⢾⣿⣶⡆⣿⣯⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⠋⠛⠳⠶⠦⣿⣼⣿⣿⣿⣸⢀⡞⠛⠛⠉⠉⠀⠀⠀⠀⠀⠘⢿⣾⡿⣋⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⣿⣯⣿⣿⣿⣿⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣿⣋⡈⠛⠛⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠁⢿⡄⠀⠀⣽⡟⢿⣿⣲⣤⣤⣤⣤⣤⣴⡟⠛⢿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⣶⣾⣷⡶⠾⠟⠂⠀⠈⣿⣿⣟⢠⣥⣾⣿⡇⠀⣾⡿⣿⠶⢶⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⡏⠀⠀⠀⠈⠀⠀⠀⠀⠘⣿⣿⣿⡸⠿⠿⣿⣿⣤⣿⣉⡀⠀⠀⢻⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⡇⡀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠛⢻⣿⠏⠀⠀⢿⡀⠈⠙⣿⡀⠀⠀⠻⢦⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣶⠾⠿⠿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣧⠀⣠⠼⠓⢦⣄⣿⣧⡤⠀⠀⠀⢻⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣶⠆⠀⠈⢹⡟⠀⣹⡿⠛⠋⠉⠉⠻⢻⣦⠀⠁⠠⣟⣻⣦⣄⣀⣀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⣴⡿⠃⠀⠀⠘⢸⡇⠿⠵⣶⠞⠉⣱⠀⠀⠀⠙⢿⣶⣶⣿⣿⣿⣿⣿⣿⣿⣦⣀⡀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⣿⣅⣀⣴⠿⠛⠷⢶⣤⣤⣶⠾⢿⡿⠀⠀⠀⠀⢸⣧⠀⣼⢁⣠⠞⢁⡀⢀⠀⠀⠈⠛⣿⣿⢻⣿⡛⣿⠀⢀⠈⠙⢿⡄⠀
+⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⣿⣿⣿⠏⢀⣦⣤⣀⡈⠙⣳⣤⡾⠃⠀⠀⠀⢠⠈⣿⣰⣧⡾⡏⣼⡾⢀⣾⡀⠀⠀⠀⣿⣿⡘⠛⢃⣿⠇⠀⠀⠀⢸⣷⠀
+⠀⠀⠀⢀⣴⣿⣯⣿⠛⣿⠿⣿⡏⠀⢀⡍⠛⠫⣍⠽⣿⠋⡄⠀⠀⠀⠀⠀⡀⣽⣿⣯⠼⣷⢻⣅⣾⡏⠿⣦⣤⣴⣿⢹⣿⣿⣿⡇⠀⠀⢀⣠⣼⡿⠃
+⠀⠀⠀⠾⣿⣟⠃⣿⡘⠛⢠⣿⣇⠀⠀⠙⠶⣤⡙⢦⣿⡀⠀⡀⠀⠀⢀⣴⢿⡟⠛⠛⠲⠾⠶⠿⠿⢷⣶⣿⣿⣿⣧⣼⣿⡿⠿⠷⠛⠛⠛⠉⠁⠀⠀
+⠀⠀⠀⠀⠸⣿⣇⠹⣿⣿⣿⡋⣿⣄⠐⠦⣄⣈⣙⣻⣿⡇⠠⠀⠀⢀⣾⠋⠀⢷⠀⠀⢠⡶⠒⣦⠀⢀⣼⢿⣿⠈⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠈⠻⠶⠿⢿⣿⡷⢾⣿⠟⠛⠒⠞⠀⣸⡟⠀⠀⠀⠀⠸⣧⡀⠀⠈⣇⠀⠋⠀⠓⡈⠀⣾⠟⠣⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠛⠻⠷⠶⠶⠤⢨⣿⡦⣄⢘⣇⠈⢛⠛⢃⣼⡟⠀⣠⢽⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</Flex>
     </Flex>
   );
 };

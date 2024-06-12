@@ -7,8 +7,8 @@ import "./index.css";
 
 const theme = extendTheme({
   fonts: {
-    heading: "HS-Regular",
-    body: "Ownglyph_ryuttung-Rg",
+    heading: "yugioh",
+    body: "yugioh",
   },
 });
 

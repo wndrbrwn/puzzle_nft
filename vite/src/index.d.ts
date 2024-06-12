@@ -7,3 +7,4 @@ interface NftMetadata {
   description: string;
   image: string;
 }
+
