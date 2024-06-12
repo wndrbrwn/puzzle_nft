@@ -2,7 +2,6 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Button,
   Flex,
-  Heading,
   Menu,
   MenuButton,
   MenuItem,
@@ -37,80 +36,70 @@ const Header: FC<HeaderProps> = ({ signer, setSigner }) => {
   };
 
   return (
-    <Heading>
-      <Flex h={20} justifyContent="space-between" alignItems="center" px={4}>
-        <Flex w={40} fontSize={20} fontWeight="semibold">
-          🐢 Save the SEA
-        </Flex>
-        <Flex display={["none", "none", "flex"]} gap={8}>
-          <Button
-            variant="link"
-            colorScheme="blue"
-            onClick={() => navigate("/")}
-          >
-            Home
-          </Button>
-          <Button
-            variant="link"
-            colorScheme="blue"
-            onClick={() => navigate("/mint")}
-          >
-            Mint
-          </Button>
-          <Button
-            variant="link"
-            colorScheme="blue"
-            onClick={() => navigate("/sale")}
-          >
-            Sale
-          </Button>
-        </Flex>
-        <Flex display={["none", "none", "flex"]} w={40} justifyContent="end">
-          {signer ? (
-            <Menu>
-              <MenuButton
-                colorScheme="blue"
-                as={Button}
-                rightIcon={<ChevronDownIcon />}
-              >
-                {signer.address.substring(0, 7)}...
-              </MenuButton>
-              <MenuList>
-                <MenuItem onClick={onClickLogOut}>로그아웃</MenuItem>
-              </MenuList>
-            </Menu>
-          ) : (
-            <Button
-              colorScheme="blue"
-              onClick={onClickMetamask}
-              fontWeight={"lighter"}
-            >
-              🦊 로그인
-            </Button>
-          )}
-        </Flex>
-        <Flex display={["flex", "flex", "none"]}>
+    <Flex h={20} justifyContent="space-between" alignItems="center" px={4}>
+      <Flex w={40} fontSize={20} fontWeight="semibold">
+        🐢 Save the SEA
+      </Flex>
+      <Flex display={["none", "none", "flex"]} gap={8}>
+        <Button variant="link" colorScheme="blue" onClick={() => navigate("/")}>
+          Home
+        </Button>
+        <Button
+          variant="link"
+          colorScheme="blue"
+          onClick={() => navigate("/mint")}
+        >
+          Mint
+        </Button>
+        <Button
+          variant="link"
+          colorScheme="blue"
+          onClick={() => navigate("/sale")}
+        >
+          Sale
+        </Button>
+      </Flex>
+      <Flex display={["none", "none", "flex"]} w={40} justifyContent="end">
+        {signer ? (
           <Menu>
             <MenuButton
               colorScheme="blue"
               as={Button}
               rightIcon={<ChevronDownIcon />}
             >
-              {signer ? `${signer.address.substring(0, 7)}...` : "메뉴"}
+              {signer.address.substring(0, 7)}...
             </MenuButton>
             <MenuList>
-              {!signer && (
-                <MenuItem onClick={onClickMetamask}>🦊 로그인</MenuItem>
-              )}
-              <MenuItem>Home</MenuItem>
-              <MenuItem>Mint</MenuItem>
-              <MenuItem>Sale</MenuItem>
-              {signer && <MenuItem onClick={onClickLogOut}>로그아웃</MenuItem>}
+              <MenuItem onClick={onClickLogOut}>로그아웃</MenuItem>
             </MenuList>
           </Menu>
-        </Flex>
+        ) : (
+          <Button colorScheme="blue" onClick={onClickMetamask}>
+            🦊 로그인
+          </Button>
+        )}
       </Flex>
-    </Heading>
+      <Flex display={["flex", "flex", "none"]}>
+        <Menu>
+          <MenuButton
+            colorScheme="blue"
+            as={Button}
+            rightIcon={<ChevronDownIcon />}
+          >
+            {signer ? `${signer.address.substring(0, 7)}...` : "메뉴"}
+          </MenuButton>
+          <MenuList>
+            {!signer && (
+              <MenuItem onClick={onClickMetamask}>🦊 로그인</MenuItem>
+            )}
+            <MenuItem>Home</MenuItem>
+            <MenuItem>Mint</MenuItem>
+            <MenuItem>Sale</MenuItem>
+            {signer && <MenuItem onClick={onClickLogOut}>로그아웃</MenuItem>}
+          </MenuList>
+        </Menu>
+      </Flex>
+    </Flex>
   );
 };
 
