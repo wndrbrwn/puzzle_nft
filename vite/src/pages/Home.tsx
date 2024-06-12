@@ -91,6 +91,7 @@ const Home: FC = () => {
             <Grid templateColumns={"repeat(4, 1fr)"}>
               {mintedList.map((v, i) => (
                 <PuzzleCard key={i} index={i} balance={v} />
+                
               ))}
             </Grid>
           </>

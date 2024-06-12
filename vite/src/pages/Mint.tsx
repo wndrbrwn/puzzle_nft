@@ -8,13 +8,42 @@ import {
     NumberInputStepper,
     Text,
   } from "@chakra-ui/react";
-  import { FC } from "react";
+  import { FC, useEffect, useState } from "react";
   import { useOutletContext } from "react-router-dom";
   import { OutletContext } from "../components/Layout";
   import { useMetamask } from "../lib";
+  import axios from "axios";
   
   const Mint: FC = () => {
-    const { signer, setSigner } = useOutletContext<OutletContext>();
+    const [tokenId, setTokenId] = useState<number>(0);
+    const [amount, setAmount] = useState<number>(0);
+    const [stsNftMetadata, setStsNftMetadata] = useState<StsNftMetadata>();
+  
+    const { signer, setSigner, mintContract } = useOutletContext<OutletContext>();
+  
+    const onClickMintNft = async () => {
+      try {
+        if (!mintContract || !tokenId || !amount) return;
+  
+        const response = await mintContract.mintNft(tokenId, amount);
+  
+        await response.wait();
+  
+        const axiosResponse = await axios.get<NftMetadata>(
+          `${import.meta.env.VITE_METADATA_URI}/${tokenId}.json`
+        );
+  
+        setStsNftMetadata({
+          ...axiosResponse.data,
+          tokenId,
+          amount,
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    useEffect(() => console.log(stsNftMetadata), [stsNftMetadata]);
   
     return (
       <Flex
@@ -26,14 +55,52 @@ import {
         alignItems="center"
       >
         {signer ? (
-          <Flex>
-            <NumberInput defaultValue={0} min={0} max={5}>
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
+          <Flex alignItems="end" gap={[4, 4, 8]} mx={4}>
+            <Flex flexDir="column" gap={[2, 2, 4]}>
+              <Text fontSize={[12, 12, 16]} fontWeight="semibold">
+                NFT ID
+              </Text>
+              <NumberInput
+                size={["sm", "sm", "md"]}
+                value={tokenId}
+                onChange={(v) => setTokenId(Number(v))}
+                defaultValue={0}
+                min={0}
+                max={16}
+              >
+                <NumberInputField />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            </Flex>
+            <Flex flexDir="column" gap={[2, 2, 4]}>
+              <Text fontSize={[12, 12, 16]} fontWeight="semibold">
+                발행량
+              </Text>
+              <NumberInput
+                size={["sm", "sm", "md"]}
+                value={amount}
+                onChange={(v) => setAmount(Number(v))}
+                defaultValue={0}
+                min={0}
+                max={5}
+              >
+                <NumberInputField />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            </Flex>
+            <Button
+              colorScheme="blue"
+              size={["sm", "sm", "md"]}
+              onClick={onClickMintNft}
+            >
+              민팅하기
+            </Button>
           </Flex>
         ) : (
           <Flex flexDir="column" gap={[4, 4, 8]} alignItems="center">

@@ -14,3 +14,4 @@ export const useMetamask = async (
     console.error(error);
   }
 };
+
