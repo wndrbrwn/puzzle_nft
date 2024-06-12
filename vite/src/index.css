@@ -2,3 +2,11 @@
   font-family: "yeongdeok-sea";
   src: url("../public/fonts/Yeongdeok\ Sea.ttf") format("truetype");
 }
+
+@font-face {
+  font-family: "HS-Regular";
+  src: url("https://gcore.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/HS-Regular.woff")
+    format("woff");
+  font-weight: lighter;
+  font-style: normal;
+}
