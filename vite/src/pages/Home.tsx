@@ -53,7 +53,6 @@ const Home: FC = () => {
       <Flex
         flexDir={"column"}
         gap={[2, 2, 4]}
-        bgColor="blue.100"
         h={[20, 20, 40]}
         justifyContent="center"
         alignItems="center"
