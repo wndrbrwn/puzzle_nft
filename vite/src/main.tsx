@@ -8,7 +8,7 @@ import "./index.css";
 const theme = extendTheme({
   fonts: {
     heading: "HS-Regular",
-    body: "HS-Regular",
+    body: "yeongdeok-sea",
   },
 });
 
